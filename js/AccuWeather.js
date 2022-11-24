@@ -2,7 +2,7 @@ class AccuWeather {
     constructor() {
         this._apikey = '81yA6ycWU6qvQwagPZCAhjTA5ApKnnig';
         this.language = 'es-ES';
-        this.basicURL = 'http://dataservice.accuweather.com/';
+        this.basicURL = 'https://dataservice.accuweather.com/';
     }
     static getInstance() {
         if(!AccuWeather.instance) {
