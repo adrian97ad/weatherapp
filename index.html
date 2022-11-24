@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Weather App</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="/js/AccuWeather.js"></script>
+</head>
+<body>
+<h1>Escribe la ciudad:</h1>
+<form action="" id="city">
+    <label for="cityName">Ciudad:</label>
+    <input type="text" id="cityName" name="cityName">
+    <br><br>
+    <input id="getCity" type="submit" value="Buscar">
+</form>
+<ol class="listadoCiudades"></ol>
+
+<script>
+    $(document).ready(function () {
+        let weather = AccuWeather.getInstance();
+        const form = document.querySelector("#city");
+        form.addEventListener("submit", e => {
+            e.preventDefault();
+            let cityName = $('#cityName')[0].value;
+            form.reset();
+            $('#cityName').focus();
+            weather.getWeatherCiy(cityName, true)
+                .then(data => {
+                    console.log(data)
+                    $('.listadoCiudades').append(`<li>En ${cityName} es ${data.IsDayTime? 'de día' : 'de noche'},
+                    está ${data.WeatherText} y hace una temperatura de ${data.ApparentTemperature.Metric.Value}
+                    ${data.ApparentTemperature.Metric.Unit}</li>`);
+                })
+                .catch(error => console.log(error));
+        });
+
+    });
+</script>
+</body>
+</html>
