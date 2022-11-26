@@ -40,22 +40,22 @@
                 })
                 .catch(error => console.log(error));
         });
-        input.addEventListener('input', e => {
-            e.preventDefault();
-            let cityName = $('#cityName')[0].value;
-            let listadoCiudades = $('#posiblesCiudades');
-            weather.autocompleteSearch(cityName).then(data => {
-                listadoCiudades.empty();
-                data.forEach(city => {
-                    listadoCiudades.append(`<option key="${city.Key}">${city.LocalizedName},
-                    ${city.AdministrativeArea.LocalizedName}</option>`);
-                });
-            })
-                .catch(error => {
-                    listadoCiudades.empty();
-                    console.log(`No se ha encontrado ninguna ciudad con esa palabra. ${error}`)
-                });
-        });
+        // input.addEventListener('input', e => {
+        //     e.preventDefault();
+        //     let cityName = $('#cityName')[0].value;
+        //     let listadoCiudades = $('#posiblesCiudades');
+        //     weather.autocompleteSearch(cityName).then(data => {
+        //         listadoCiudades.empty();
+        //         data.forEach(city => {
+        //             listadoCiudades.append(`<option key="${city.Key}">${city.LocalizedName},
+        //             ${city.AdministrativeArea.LocalizedName}</option>`);
+        //         });
+        //     })
+        //         .catch(error => {
+        //             listadoCiudades.empty();
+        //             console.log(`No se ha encontrado ninguna ciudad con esa palabra. ${error}`)
+        //         });
+        // });
     });
 </script>
 </body>
