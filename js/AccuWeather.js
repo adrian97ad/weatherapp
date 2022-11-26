@@ -2,7 +2,10 @@ class AccuWeather {
     constructor() {
         this._apikey = '81yA6ycWU6qvQwagPZCAhjTA5ApKnnig';
         this.language = 'es-ES';
-        this.basicURL = 'https://dataservice.accuweather.com/';
+        this.urls = {
+            basic: 'https://dataservice.accuweather.com/',
+            cities: 'https://dataservice.accuweather.com/locations/v1/cities/'
+        }
     }
     static getInstance() {
         if(!AccuWeather.instance) {
@@ -12,15 +15,20 @@ class AccuWeather {
     }
 
     async getCity(cityName) {
-        const city = await fetch(`${this.basicURL}locations/v1/cities/search?apikey=${this._apikey}&q=${encodeURI(cityName)}&language=${this.language}&details=false&offset=5`);
+        const city = await fetch(`${this.urls.cities}search?apikey=${this._apikey}&q=${encodeURI(cityName)}&language=${this.language}&details=false&offset=5`);
         const data = await city.json();
         return data[0].Key;
     }
 
     async getWeatherCiy(cityName) {
         const cityCode = await this.getCity(cityName);
-        const city = await fetch(`${this.basicURL}/currentconditions/v1/${cityCode}?apikey=${this._apikey}&language=${this.language}&details=true`);
+        const city = await fetch(`${this.urls.basic}/currentconditions/v1/${cityCode}?apikey=${this._apikey}&language=${this.language}&details=true`);
         const data = await city.json();
         return data[0];
+    }
+
+    async autocompleteSearch(text) {
+        const city = await fetch(`${this.urls.cities}autocomplete?apikey=${this._apikey}&q=${encodeURI(text)}&language=${this.language}`)
+        return await city.json();
     }
 }

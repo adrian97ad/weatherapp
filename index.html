@@ -1,25 +1,31 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" style="background: radial-gradient(circle at 50% 120%, #00B2E9 0%, #004380 75%) no-repeat;color: white;font-family: 'Tahoma', sans-serif; height: 100%;">
 <head>
     <meta charset="UTF-8">
     <title>Weather App</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="js/AccuWeather.js"></script>
+    <script type="module" src="js/ServiceWorker.js"></script>
 </head>
 <body>
 <h1>Escribe la ciudad:</h1>
 <form action="" id="city">
     <label for="cityName">Ciudad:</label>
-    <input type="text" id="cityName" name="cityName">
-    <br><br>
+    <input type="text" id="cityName" name="cityName" autocomplete="off" list="posiblesCiudades">
+    <datalist id="posiblesCiudades"></datalist>
+    <br>
+    <br>
     <input id="getCity" type="submit" value="Buscar">
 </form>
+<br>
 <ol class="listadoCiudades"></ol>
+
 
 <script>
     $(document).ready(function () {
         let weather = AccuWeather.getInstance();
         const form = document.querySelector("#city");
+        const input = document.querySelector("#cityName");
         form.addEventListener("submit", e => {
             e.preventDefault();
             let cityName = $('#cityName')[0].value;
@@ -34,7 +40,22 @@
                 })
                 .catch(error => console.log(error));
         });
-
+        input.addEventListener('input', e => {
+            e.preventDefault();
+            let cityName = $('#cityName')[0].value;
+            let listadoCiudades = $('#posiblesCiudades');
+            weather.autocompleteSearch(cityName).then(data => {
+                listadoCiudades.empty();
+                data.forEach(city => {
+                    listadoCiudades.append(`<option key="${city.Key}">${city.LocalizedName},
+                    ${city.AdministrativeArea.LocalizedName}</option>`);
+                });
+            })
+                .catch(error => {
+                    listadoCiudades.empty();
+                    console.log(`No se ha encontrado ninguna ciudad con esa palabra. ${error}`)
+                });
+        });
     });
 </script>
 </body>
