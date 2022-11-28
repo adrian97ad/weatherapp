@@ -1,0 +1,177 @@
+@weatherIconPath: "https://developer.accuweather.com/sites/default/files/";
+
+.weatherIcon {
+  width: 75px;
+  height: 45px;
+  background-repeat: no-repeat;
+  background-size: contain;
+}
+
+@iterations: 44;
+.weatherIcon10-44 (@i) when (@i > 9) {
+  .weatherIcon-@{i} {
+    background-image: url("@{weatherIconPath}@{i}-s.png");
+  }
+  .weatherIcon10-44(@i - 1);
+}
+
+.weatherIcon10-44(@iterations);
+.weatherIcon1-9 (@i) when (@i > 0) {
+  .weatherIcon-@{i} {
+    background-image: url("@{weatherIconPath}0@{i}-s.png");
+    }
+  .weatherIcon1-9(@i - 1);
+}
+
+.weatherIcon1-9(9);
+
+#forecastContainer {
+  margin: auto;
+  width: 90%;
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: stretch;
+
+  #currentCity {
+    width: 50%;
+    #cityForm {
+      display: flex;
+      margin: 10px;
+      margin-top: 30px;
+      border-radius: 30px;
+      border: 1px solid #dcdcdc;
+      justify-content: center;
+      width: 50%;
+
+      .cityInput {
+        color: white;
+        font-family: 'Tahoma', sans-serif;
+        font-size: 15px;
+        margin: 2px;
+        padding: 5px;
+        border-radius: 30px;
+        background-color: transparent;
+
+        &#cityName {
+          margin-left: 10px;
+          width: 98%;
+          outline: none;
+          background-color: transparent;
+          border: none;
+        }
+
+        &#getCity {
+          border: 1px solid #dcdcdc;
+        }
+      }
+    }
+  }
+
+  #cityList {
+    width: 50%;
+    .cityInfo {
+      width: 30%;
+      background-color: #0d224280;
+      display: flex;
+      border-radius: 30px;
+      padding: 15px;
+      flex-direction: column;
+      margin: 5px;
+
+      .todayInfo {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        flex-direction: row;
+        justify-content: space-around;
+
+        .todayInfoLeft {
+          display: flex;
+          flex-direction: column;
+
+          .dayTemperature {
+            font-size: 40px;
+            margin-bottom: 7px;
+          }
+
+          .cityAndState {
+            display: flex;
+            flex-direction: row;
+            margin-bottom: 10px;
+
+            .cityName {
+              padding-right: 5px;
+              border-right: 1px solid white;
+              color: #5cbcc1;
+            }
+
+            .stateName {
+              padding-left: 5px;
+              color: #687488;
+            }
+          }
+
+          .maxTminTHumidity {
+            display: flex;
+            flex-direction: row;
+            justify-content: flex-start;
+            font-size: 12px;
+            margin-bottom: 10px;
+
+            .tempMax {
+              margin-right: 10px;
+            }
+
+            .tempMin {
+              margin-right: 10px;
+              color: #687488;
+            }
+
+            .humidity {
+              color: #5794c5;
+            }
+          }
+        }
+      }
+
+      .nextDays {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-evenly;
+        border-top: 1px solid;
+
+        .oneDayAfter {
+          margin-top: 10px;
+
+          .dayAfterInfo {
+            display: flex;
+            flex-direction: column;
+
+            .weekDay {
+              text-align: center;
+              color: #5cbcc1;
+            }
+
+            .nextDaysTemperatures {
+              display: flex;
+              flex-direction: row;
+              justify-content: space-evenly;
+
+              .tempMin {
+                color: #687488;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+@media only screen and (max-width: 620px) {
+  /* For mobile phones: */
+  .cityInfo {
+    width: 80%;
+  }
+}

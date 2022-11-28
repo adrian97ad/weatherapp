@@ -4,7 +4,11 @@ const registerServiceWorker = async () => {
     if ('serviceWorker' in navigator) { // service worker es compatible
         try {
             // Registramos el service worker para la aplicacion
-            const registration = await navigator.serviceWorker.register('/js/ServiceWorker.js');
+            const registration = await navigator.serviceWorker.register('/js/ServiceWorker.js',
+                {
+                    updateViaCache: 'all',
+                }
+            );
             if (registration.installing){
                 console.log("Instalando el Service worker");
             }

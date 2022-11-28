@@ -3,29 +3,58 @@
 <head>
     <meta charset="UTF-8">
     <title>Weather App</title>
+    <link rel="stylesheet/less" type="text/css" href="css/weatherapp.less"/>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/less.js/2.5.1/less.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="js/AccuWeather.js"></script>
-    <script type="module" src="js/ServiceWorker.js"></script>
 </head>
 <body>
-<h1>Escribe la ciudad:</h1>
-<form action="" id="city">
-    <label for="cityName">Ciudad:</label>
-    <input type="text" id="cityName" name="cityName" autocomplete="off" list="posiblesCiudades">
-    <datalist id="posiblesCiudades"></datalist>
-    <br>
-    <br>
-    <input id="getCity" type="submit" value="Buscar">
-</form>
-<br>
-<ol class="listadoCiudades"></ol>
+<div id="forecastContainer">
+    <div id="currentCity">
+        <form action="" id="cityForm">
+            <input type="text" id="cityName" class="cityInput" placeholder="Ciudad" autocomplete="off">
+            <input id="getCity" class="cityInput" type="submit" value="Buscar">
+        </form>
+    </div>
+    <div id="cityList">
+        <div class="cityInfo">
+            <div class="todayInfo">
+                <div class="todayInfoLeft">
+                    <div class="dayTemperature">12.2º</div>
+                    <div class="cityAndState">
+                        <div class="cityName">Alcorcón</div>
+                        <div class="stateName">Comunidad de Madrid</div>
+                    </div>
+                    <div class="maxTminTHumidity">
+                        <div class="tempMax">20º</div>
+                        <div class="tempMin">17º</div>
+                        <div class="humidity">Humedad: 48</div>
+                    </div>
+                </div>
+                <div class="weatherIcon weatherIcon-1"></div>
+            </div>
+            <div class="nextDays">
+                <div class="oneDayAfter">
+                    <div class="weatherIcon weatherIcon-1"></div>
+                    <div class="dayAfterInfo">
+                        <div class="weekDay">Viernes</div>
+                        <div class="nextDaysTemperatures">
+                            <div class="tempMax">20º</div>
+                            <div class="tempMin">17º</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
-
+<script type="module" src="js/registerServiceWorker.js"></script>
 <script>
     $(document).ready(function () {
         let weather = AccuWeather.getInstance();
-        const form = document.querySelector("#city");
-        const input = document.querySelector("#cityName");
+        const form = document.querySelector("#cityForm");
+        city = null;
         form.addEventListener("submit", e => {
             e.preventDefault();
             let cityName = $('#cityName')[0].value;
@@ -33,6 +62,7 @@
             $('#cityName').focus();
             weather.getWeatherCiy(cityName, true)
                 .then(data => {
+                    city = data;
                     console.log(data)
                     $('.listadoCiudades').append(`<li>En ${cityName} es ${data.IsDayTime? 'de día' : 'de noche'},
                     está ${data.WeatherText} y hace una temperatura de ${data.ApparentTemperature.Metric.Value}
