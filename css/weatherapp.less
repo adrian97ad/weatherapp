@@ -1,5 +1,11 @@
 @weatherIconPath: "https://developer.accuweather.com/sites/default/files/";
 
+.weatherApp {
+  background: radial-gradient(circle at 50% 120%, #00B2E9 0%, #004380 75%) no-repeat;
+  color: white;
+  font-family: 'Tahoma', sans-serif;
+}
+
 .weatherIcon {
   width: 75px;
   height: 45px;
@@ -19,7 +25,7 @@
 .weatherIcon1-9 (@i) when (@i > 0) {
   .weatherIcon-@{i} {
     background-image: url("@{weatherIconPath}0@{i}-s.png");
-    }
+  }
   .weatherIcon1-9(@i - 1);
 }
 
@@ -36,6 +42,7 @@
 
   #currentCity {
     width: 50%;
+
     #cityForm {
       display: flex;
       margin: 10px;
@@ -43,7 +50,7 @@
       border-radius: 30px;
       border: 1px solid #dcdcdc;
       justify-content: center;
-      width: 50%;
+      width: 95%;
 
       .cityInput {
         color: white;
@@ -67,13 +74,98 @@
         }
       }
     }
+
+    .hourlyForecasts24 {
+      width: 90%;
+      margin: 0 auto;
+      margin-bottom: 10px;
+      border-radius: 30px;
+      padding: 10px;
+      display: flex;
+      justify-content: space-evenly;
+      overflow-x: scroll;
+      -ms-overflow-style: none; /* IE and Edge */
+      scrollbar-width: none; /* Firefox */
+
+      &::-webkit-scrollbar {
+        height: 10px;
+      }
+
+      &::-webkit-scrollbar-thumb {
+        background: rgba(255, 255, 255, 0);
+      }
+
+      .hourForeCast {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        .hourForeCast-element {
+          margin-bottom: 10px;
+        }
+
+        .temperatureGrpahic {
+          height: 30px;
+
+          .currentTemperatureHeight {
+            position: relative;
+            width: 5px;
+            height: 5px;
+            background-color: white;
+            border-radius: 5px;
+            top: 0%;
+          }
+        }
+      }
+    }
+
+    .weeklyForecasts {
+      width: 90%;
+      margin: 0 auto;
+      margin-bottom: 10px;
+      border-radius: 30px;
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+
+      .dayForeCast {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        .dayWeek {
+          margin-left: 2%;
+        }
+
+        .dayStats {
+          display: flex;
+          flex-direction: row;
+          align-items: center;
+          justify-content: space-between;
+
+          .weatherDayNight {
+            display: flex;
+          }
+
+          .maxTminT {
+            display: flex;
+
+            .maxTemp {
+              margin-right: 5px;
+            }
+          }
+        }
+      }
+    }
   }
 
   #cityList {
     width: 50%;
+    margin-top: 30px;
+
     .cityInfo {
-      width: 30%;
-      background-color: #0d224280;
+      width: 90%;
+      //background-color: #0d224280;
       display: flex;
       border-radius: 30px;
       padding: 15px;
@@ -169,6 +261,25 @@
     }
   }
 }
+
+.gradient-background {
+  background: linear-gradient(40deg, #00b2e9, #004380);
+  background-size: 200% 200%;
+  animation: gradient 5s ease infinite;
+}
+
+@keyframes gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
 @media only screen and (max-width: 620px) {
   /* For mobile phones: */
   #forecastContainer {
