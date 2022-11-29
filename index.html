@@ -6,16 +6,37 @@
     <link rel="stylesheet/less" type="text/css" href="css/weatherapp.less"/>
     <script src="//cdnjs.cloudflare.com/ajax/libs/less.js/2.5.1/less.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <script src="js/AccuWeather.js"></script>
 </head>
-<body style="height: 945px;">
+<body>
 <div id="forecastContainer">
     <div id="currentCity">
         <form action="" id="cityForm">
             <input type="text" id="cityName" class="cityInput" placeholder="Ciudad" autocomplete="off">
-            <input id="getCity" class="cityInput" type="submit" value="Buscar">
+            <button class="cityInput" id="getCity"><i class="fa fa-search"></i></button>
         </form>
-        <div class="hourlyForecasts24 gradient-background">
+        <div id="todayForecast">
+            <div class="todayInfo">
+                <div class="todayInfoLeft">
+                    <div class="dayTemperature">12.2º</div>
+                    <div class="cityAndState">
+                        <div class="cityName">Alcorcón</div>
+                        <div class="stateName">Comunidad de Madrid</div>
+                        <span class="favorite"><i class="fa fa-star-o"></i></span>
+                    </div>
+                    <div class="maxTminTHumidity">
+                        <div class="tempMax">20º</div>
+                        <div class="tempMin">17º</div>
+                        <div class="humidity">Humedad: 48</div>
+                    </div>
+                </div>
+                <div class="weatherContainer">
+                    <div class="weatherIcon weatherIcon-1"></div>
+                </div>
+            </div>
+        </div>
+        <div class="hourlyForecasts12 gradient-background">
             <div class="hourForeCast">
                 <div class="hour hourForeCast-element"> 11 p. m.</div>
                 <div class="weatherIcon weatherIcon-1 hourForeCast-element"></div>
@@ -23,7 +44,7 @@
                 <div class="temperatureGrpahic hourForeCast-element">
                     <div class="currentTemperatureHeight"></div>
                 </div>
-                <div class="humidity">2%</div>
+                <div class="precipitationProbability">2% <i class="fa fa-tint"></i></div>
             </div>
             <div class="hourForeCast">
                 <div class="hour hourForeCast-element"> 11 p. m.</div>
@@ -32,7 +53,7 @@
                 <div class="temperatureGrpahic hourForeCast-element">
                     <div class="currentTemperatureHeight"></div>
                 </div>
-                <div class="humidity">2%</div>
+                <div class="precipitationProbability">2% <i class="fa fa-tint"></i></div>
             </div>
             <div class="hourForeCast">
                 <div class="hour hourForeCast-element"> 11 p. m.</div>
@@ -147,6 +168,7 @@
                     <div class="cityAndState">
                         <div class="cityName">Alcorcón</div>
                         <div class="stateName">Comunidad de Madrid</div>
+                        <span class="favorite selected"><i class="fa fa-star"></i></span>
                     </div>
                     <div class="maxTminTHumidity">
                         <div class="tempMax">20º</div>
@@ -174,50 +196,16 @@
 
 <script type="module" src="js/registerServiceWorker.js"></script>
 <script>
-    function getOffset(el) {
-        let rect = el.getBoundingClientRect();
-        return {
-            left: rect.left + window.pageXOffset,
-            top: rect.top + window.pageYOffset,
-            width: rect.width || el.offsetWidth,
-            height: rect.height || el.offsetHeight
-        };
-    }
-
-    function connect(div1, div2) { // draw a line connecting elements
-        let off1 = getOffset(div1[0]);
-        let off2 = getOffset(div2[0]);
-        // bottom right
-        let x1 = off1.left + off1.width;
-        let y1 = off1.top + off1.height;
-        // top right
-        let x2 = off2.left + off2.width;
-        let y2 = off2.top;
-        // distance
-        let length = Math.sqrt(((x2 - x1) * (x2 - x1)) + ((y2 - y1) * (y2 - y1)));
-        // center
-        let cx = ((x1 + x2) / 2) - (length / 2);
-        let cy = ((y1 + y2) / 2) - (3 / 2);
-        // angle
-        let angle = Math.atan2((y1 - y2), (x1 - x2)) * (180 / Math.PI);
-        // make hr
-        let htmlLine = `<div style="padding:0px; margin:0px; height:3px; background-color: white; line-height:1px;
-            position:absolute; left:${cx}px; top:${cy}px; width:${length}px; -moz-transform:rotate(${angle}deg);
-            -webkit-transform:rotate(${angle}deg); -o-transform:rotate(${angle}deg); -ms-transform:rotate(${angle}deg);
-            transform:rotate(${angle}deg);">`;
-        document.body.innerHTML += htmlLine;
-    }
-</script>
-<script>
     $(document).ready(function () {
         let weather = AccuWeather.getInstance();
-        const form = document.querySelector("#cityForm");
+        const form = document.querySelector("#getCity");
         city = null;
         form.addEventListener("submit", e => {
             e.preventDefault();
             let cityName = $('#cityName')[0].value;
             form.reset();
             $('#cityName').focus();
+            debugger;
             weather.getWeatherCiy(cityName, true)
                 .then(data => {
                     city = data;
@@ -228,22 +216,6 @@
                 })
                 .catch(error => console.log(error));
         });
-        // input.addEventListener('input', e => {
-        //     e.preventDefault();
-        //     let cityName = $('#cityName')[0].value;
-        //     let listadoCiudades = $('#posiblesCiudades');
-        //     weather.autocompleteSearch(cityName).then(data => {
-        //         listadoCiudades.empty();
-        //         data.forEach(city => {
-        //             listadoCiudades.append(`<option key="${city.Key}">${city.LocalizedName},
-        //             ${city.AdministrativeArea.LocalizedName}</option>`);
-        //         });
-        //     })
-        //         .catch(error => {
-        //             listadoCiudades.empty();
-        //             console.log(`No se ha encontrado ninguna ciudad con esa palabra. ${error}`)
-        //         });
-        // });
     });
 </script>
 </body>

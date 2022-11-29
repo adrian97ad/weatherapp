@@ -4,7 +4,8 @@ class AccuWeather {
         this.language = 'es-ES';
         this.urls = {
             basic: 'https://dataservice.accuweather.com/',
-            cities: 'https://dataservice.accuweather.com/locations/v1/cities/'
+            cities: 'https://dataservice.accuweather.com/locations/v1/cities/',
+            forecast: 'http://dataservice.accuweather.com/forecasts/v1/'
         }
     }
     static getInstance() {

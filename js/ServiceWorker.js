@@ -67,11 +67,12 @@ self.addEventListener("install", event => {
     // El service worker no se instala hasta que el codigo dentro de waitUntil haya ocurrido con exito
     event.waitUntil(addResourcesToCache(
         [
-            "/",
-            "/index.html",
-            "/js/AccuWeather.js",
-            "/js/RegisterServiceWorker.js",
-            "/js/ServiceWorker.js"
+            "./",
+            "./index.html",
+            "./js/AccuWeather.js",
+            "./js/RegisterServiceWorker.js",
+            "./js/ServiceWorker.js",
+            "./css/weatherapp.less"
         ]
     ));
 });
