@@ -1,5 +1,6 @@
 class City {
     constructor(data) {
+        this.jq = $('#currentCity');
         this._key = null;
         this.cityName = null;
         this.cityState = null;
@@ -15,22 +16,11 @@ class City {
 
 class ForeCastCity {
     constructor(city) {
-        this.jq = null;
-        this.temperature = {
-            currentTemperature: null,
-            maxTemperature: null,
-            minTemperature: null
-        }
+        this.jq = $('#todayForecast');
+        this.temperature = null;
         this.city = city;
-        this.currentWeather = {
-            text: null,
-            icon: null
-        };
-        this.humidity = null;
-    }
-
-    initHTML() {
-        this.jq = $('#currentCity');
+        this.weather = null;
+        this.precipitation = null;
     }
 
     /*
@@ -103,12 +93,11 @@ class ForeCastCity {
   }
     * */
     getCurrentConditions(data) {
-        this.temperature.currentTemperature = Math.round(data.Temperature.Metric.Value);
-        this.temperature.maxTemperature = Math.round(data.TemperatureSummary.Past24HourRange.Maximum.Metric.Value);
-        this.temperature.minTemperature = Math.round(data.TemperatureSummary.Past24HourRange.Minimum.Metric.Value);
-        this.currentWeather.text = data.WeatherText;
-        this.currentWeather.icon = data.WeatherIcon;
-        this.humidity = data.RelativeHumidity;
+        this.temperature = new HTMLTemperature(Math.round(data.Temperature.Metric.Value),
+            Math.round(data.TemperatureSummary.Past24HourRange.Maximum.Metric.Value),
+            Math.round(data.TemperatureSummary.Past24HourRange.Minimum.Metric.Value));
+        this.weather = new HTMLWeather(data.WeatherIcon);
+        this.precipitation = new HTMLPrecipitation(data.RelativeHumidity);
         this.currentWeatherLink = data.Link;
         return this;
     }
@@ -116,23 +105,23 @@ class ForeCastCity {
         this.jq.append(`<div id="todayForecast">
             <div class="todayInfo">
                 <div class="todayInfoLeft">
-                    <div class="dayTemperature">${this.temperature.currentTemperature}</div>
+                    <div class="dayTemperature">${this.temperature.currentTemp}</div>
                     <div class="cityAndState">
                         <div class="cityName">${this.city.cityName}</div>
                         <div class="stateName">${this.city.cityState}</div>
                         <span class="favorite"><i class="fa fa-star${this.city.isFavorite ? '' : '-o'}"></i></span>
                     </div>
                     <div class="maxTminTHumidity">
-                        <div class="tempMax">${this.temperature.maxTemperature}</div>
-                        <div class="tempMin">${this.temperature.minTemperature}</div>
-                        <div class="humidity">Humedad: ${this.humidity}</div>
+                        <div class="tempMax">${this.temperature.todayMaxTemp}</div>
+                        <div class="tempMin">${this.temperature.todayMinTemp}</div>
+                        <div class="humidity">Humedad: ${this.precipitation.currentHumidity}</div>
                     </div>
                 </div>
                 <div class="weatherContainer">
-                    <div class="weatherIcon weatherIcon-${this.currentWeather.icon}"></div>
+                    <div class="currentWeather weatherIcon weatherIcon-${this.currentWeather.icon}"></div>
                 </div>
             </div>
-        </div>`)
+        </div>`);
         return this;
     }
 
@@ -163,13 +152,16 @@ class ForeCastCity {
             link : null
         }
         let hours = [];
-
+        let self = this;
         data.forEach(data => {
             hourForeCast.hour = parseInt(data.DateTime.split('T')[1].match(/\d+/i)[0]);
             hourForeCast.hour = hourForeCast.hour > 12 ? (hourForeCast.hour -= 12) + ' p. m.' : hourForeCast.hour + ' a. m.';
             hourForeCast.weather = data.WeatherIcon;
-            hourForeCast.temperature= parseInt(data.Temperature.Value);
+            self.weather.addHourlyWeather(hourForeCast.weather);
+            hourForeCast.temperature = parseInt(data.Temperature.Value);
+            self.temperature.addHourlyTemp(hourForeCast.temperature);
             hourForeCast.precipitationProbability = data.PrecipitationProbability;
+            self.precipitation.addHourlyPrecipitation(hourForeCast.precipitationProbability);
             hourForeCast.link = data.Link;
             hours.push(hourForeCast);
         });
