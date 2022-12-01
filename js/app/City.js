@@ -17,8 +17,10 @@ class City {
 class ForeCastCity {
     constructor(city) {
         this.jq = $('#todayForecast');
-        this.temperature = null;
+        this.dailyjq = $('.hourlyForecasts12');
+        this.weeklyjq = $('.weeklyForecasts');
         this.city = city;
+        this.temperature = null;
         this.weather = null;
         this.precipitation = null;
     }
@@ -105,7 +107,7 @@ class ForeCastCity {
         this.jq.append(`<div id="todayForecast">
             <div class="todayInfo">
                 <div class="todayInfoLeft">
-                    <div class="dayTemperature">${this.temperature.currentTemp}</div>
+                    <div class="dayTemperature">${this.temperature.currentTemp}º</div>
                     <div class="cityAndState">
                         <div class="cityName">${this.city.cityName}</div>
                         <div class="stateName">${this.city.cityState}</div>
@@ -151,42 +153,44 @@ class ForeCastCity {
             precipitationProbability: null,
             link : null
         }
-        let hours = [];
+        this.hoursForecast = [];
         let self = this;
         data.forEach(data => {
-            hourForeCast.hour = parseInt(data.DateTime.split('T')[1].match(/\d+/i)[0]);
-            hourForeCast.hour = hourForeCast.hour > 12 ? (hourForeCast.hour -= 12) + ' p. m.' : hourForeCast.hour + ' a. m.';
+            let hour = new Date(data.DateTime).getHours();
+            hourForeCast.hour = hour % 12;
+            hourForeCast.hour += (hour / 12 > 1)? ' p. m.' : ' a. m.';
             hourForeCast.weather = data.WeatherIcon;
             self.weather.addHourlyWeather(hourForeCast.weather);
-            hourForeCast.temperature = parseInt(data.Temperature.Value);
+            hourForeCast.temperature = Math.round(data.Temperature.Value);
             self.temperature.addHourlyTemp(hourForeCast.temperature);
             hourForeCast.precipitationProbability = data.PrecipitationProbability;
             self.precipitation.addHourlyPrecipitation(hourForeCast.precipitationProbability);
             hourForeCast.link = data.Link;
-            hours.push(hourForeCast);
+            hoursForecast.push(hourForeCast);
         });
-        this.hoursForecast = hours;
         return this;
     }
 
     render12hoursConditions() {
         this.jq.append(`<div class="hourlyForecasts12 gradient-background">`);
-        let temperatureNormalized = this.temperature.maxTemperature - this.temperature.minTemperature;
+        let self = this;
         this.hoursForecast.forEach(hour => {
             $('.hourlyForecasts12').append(`<div class="hourForeCast">
                 <div class="hour hourForeCast-element"> ${hour.hour}</div>
-                <div class="weatherIcon weatherIcon-${hour.weather} hourForeCast-element"></div>
-                <div class="temperature hourForeCast-element">${hour.temperature}</div>
+                <div class="hourWeather weatherIcon weatherIcon-${hour.weather} hourForeCast-element"></div>
+                <div class="hourlyTemperature hourForeCast-element">${hour.temperature}º</div>
                 <div class="temperatureGrpahic hourForeCast-element">
-                    <div class="currentTemperatureHeight" style="top=${100 - Math.round(hour.temperature * 100 / temperatureNormalized)}%"></div>
+                    <div class="currentTemperatureHeight"
+                    style="top=${self.temperature.calculateRelativeTemperature(hour.temperature)}%"></div>
                 </div>
-                <div class="precipitationProbability"><i class="fa fa-tint"></i> ${hour.precipitationProbability}%</div>
+                <div class="hourlyPrecipitation"><i class="fa fa-tint"></i> ${hour.precipitationProbability}%</div>
             </div>`);
         })
         return this;
     }
 
     set5DaysForecast(data) {
+        const weekday = ["domingo","lunes","martes","miércoles","jueves","viernes","sábado"];
         let fiveDaysDatiledInfo = {
             "Headline": {
                 "EffectiveDate": "2022-12-02T07:00:00+01:00",
@@ -1489,178 +1493,50 @@ class ForeCastCity {
                 }
             ]
         };
-        let fiveDaysInfo = {
-            "Headline": {
-                "EffectiveDate": "2022-12-02T07:00:00+01:00",
-                "EffectiveEpochDate": 1669960800,
-                "Severity": 5,
-                "Text": "Niebla afectará a la zona el viernes por la mañana",
-                "Category": "fog",
-                "EndDate": "2022-12-02T13:00:00+01:00",
-                "EndEpochDate": 1669982400,
-                "MobileLink": "http://www.accuweather.com/es/es/alcorcon/305882/daily-weather-forecast/305882?unit=c",
-                "Link": "http://www.accuweather.com/es/es/alcorcon/305882/daily-weather-forecast/305882?unit=c"
-            },
-            "DailyForecasts": [
-                {
-                    "Date": "2022-11-30T07:00:00+01:00",
-                    "EpochDate": 1669788000,
-                    "Temperature": {
-                        "Minimum": {
-                            "Value": 3.9,
-                            "Unit": "C",
-                            "UnitType": 17
-                        },
-                        "Maximum": {
-                            "Value": 11.1,
-                            "Unit": "C",
-                            "UnitType": 17
-                        }
-                    },
-                    "Day": {
-                        "Icon": 3,
-                        "IconPhrase": "Parcialmente soleado",
-                        "HasPrecipitation": false
-                    },
-                    "Night": {
-                        "Icon": 38,
-                        "IconPhrase": "Mayormente nublado",
-                        "HasPrecipitation": false
-                    },
-                    "Sources": [
-                        "AccuWeather"
-                    ],
-                    "MobileLink": "http://www.accuweather.com/es/es/alcorcon/305882/daily-weather-forecast/305882?day=1&unit=c",
-                    "Link": "http://www.accuweather.com/es/es/alcorcon/305882/daily-weather-forecast/305882?day=1&unit=c"
-                },
-                {
-                    "Date": "2022-12-01T07:00:00+01:00",
-                    "EpochDate": 1669874400,
-                    "Temperature": {
-                        "Minimum": {
-                            "Value": 0.6,
-                            "Unit": "C",
-                            "UnitType": 17
-                        },
-                        "Maximum": {
-                            "Value": 13.9,
-                            "Unit": "C",
-                            "UnitType": 17
-                        }
-                    },
-                    "Day": {
-                        "Icon": 2,
-                        "IconPhrase": "Mayormente soleado",
-                        "HasPrecipitation": false
-                    },
-                    "Night": {
-                        "Icon": 38,
-                        "IconPhrase": "Mayormente nublado",
-                        "HasPrecipitation": false
-                    },
-                    "Sources": [
-                        "AccuWeather"
-                    ],
-                    "MobileLink": "http://www.accuweather.com/es/es/alcorcon/305882/daily-weather-forecast/305882?day=2&unit=c",
-                    "Link": "http://www.accuweather.com/es/es/alcorcon/305882/daily-weather-forecast/305882?day=2&unit=c"
-                },
-                {
-                    "Date": "2022-12-02T07:00:00+01:00",
-                    "EpochDate": 1669960800,
-                    "Temperature": {
-                        "Minimum": {
-                            "Value": 1.1,
-                            "Unit": "C",
-                            "UnitType": 17
-                        },
-                        "Maximum": {
-                            "Value": 10,
-                            "Unit": "C",
-                            "UnitType": 17
-                        }
-                    },
-                    "Day": {
-                        "Icon": 4,
-                        "IconPhrase": "Nubes y claros",
-                        "HasPrecipitation": false
-                    },
-                    "Night": {
-                        "Icon": 38,
-                        "IconPhrase": "Mayormente nublado",
-                        "HasPrecipitation": false
-                    },
-                    "Sources": [
-                        "AccuWeather"
-                    ],
-                    "MobileLink": "http://www.accuweather.com/es/es/alcorcon/305882/daily-weather-forecast/305882?day=3&unit=c",
-                    "Link": "http://www.accuweather.com/es/es/alcorcon/305882/daily-weather-forecast/305882?day=3&unit=c"
-                },
-                {
-                    "Date": "2022-12-03T07:00:00+01:00",
-                    "EpochDate": 1670047200,
-                    "Temperature": {
-                        "Minimum": {
-                            "Value": 1.1,
-                            "Unit": "C",
-                            "UnitType": 17
-                        },
-                        "Maximum": {
-                            "Value": 8.9,
-                            "Unit": "C",
-                            "UnitType": 17
-                        }
-                    },
-                    "Day": {
-                        "Icon": 4,
-                        "IconPhrase": "Nubes y claros",
-                        "HasPrecipitation": false
-                    },
-                    "Night": {
-                        "Icon": 35,
-                        "IconPhrase": "Parcialmente nublado",
-                        "HasPrecipitation": false
-                    },
-                    "Sources": [
-                        "AccuWeather"
-                    ],
-                    "MobileLink": "http://www.accuweather.com/es/es/alcorcon/305882/daily-weather-forecast/305882?day=4&unit=c",
-                    "Link": "http://www.accuweather.com/es/es/alcorcon/305882/daily-weather-forecast/305882?day=4&unit=c"
-                },
-                {
-                    "Date": "2022-12-04T07:00:00+01:00",
-                    "EpochDate": 1670133600,
-                    "Temperature": {
-                        "Minimum": {
-                            "Value": 3.3,
-                            "Unit": "C",
-                            "UnitType": 17
-                        },
-                        "Maximum": {
-                            "Value": 8.3,
-                            "Unit": "C",
-                            "UnitType": 17
-                        }
-                    },
-                    "Day": {
-                        "Icon": 4,
-                        "IconPhrase": "Nubes y claros",
-                        "HasPrecipitation": false
-                    },
-                    "Night": {
-                        "Icon": 38,
-                        "IconPhrase": "Mayormente nublado",
-                        "HasPrecipitation": true,
-                        "PrecipitationType": "Rain",
-                        "PrecipitationIntensity": "Light"
-                    },
-                    "Sources": [
-                        "AccuWeather"
-                    ],
-                    "MobileLink": "http://www.accuweather.com/es/es/alcorcon/305882/daily-weather-forecast/305882?day=5&unit=c",
-                    "Link": "http://www.accuweather.com/es/es/alcorcon/305882/daily-weather-forecast/305882?day=5&unit=c"
-                }
-            ]
-        };
+        let dayForeCast = {
+            day: null,
+            precipitationProbability: null,
+            dayWeather: null,
+            nightWeather: null,
+            tempMax: null,
+            tempMin: null,
+            link: null
+        }
+        this.daysForeCast = [];
+        let self = this;
+        data.DailyForecasts.forEach(data => {
+            dayForeCast.day = weekday[new Date(data.Date).getDay()];
+            dayForeCast.precipitationProbability = Math.max(data.Day.PrecipitationProbability,
+                data.Night.PrecipitationProbability);
+            dayForeCast.dayWeather = data.Day.Icon;
+            dayForeCast.nightWeather = data.Night.Icon;
+            dayForeCast.tempMax = Math.round(data.Temperature.Maximum.Value);
+            dayForeCast.tempMin = Math.round(data.Temperature.Minimum.Value);
+            dayForeCast.link = data.Link;
+            daysForeCast.push(dayForeCast);
+        });
+        return this;
+    }
+    render5DaysConditions() {
+        this.jq.append(`<div class="weeklyForecasts gradient-background">`);
+        let self = this;
+        this.daysForeCast.forEach(day => {
+            $('.weeklyForecasts').append(`<div class="dayForeCast">
+                <div class="dayWeek">${day.day}</div>
+                <div class="dayStats">
+                    <div class="dailyPrecipitation"> <i class="fa fa-tint"> ${day.precipitationProbability}%</i></div>
+                    <div class="weatherDayNight">
+                        <div class="dayWeather weatherIcon weatherIcon-${day.dayWeather}"></div>
+                        <div class="nightWeather weatherIcon weatherIcon-${day.nightWeather}"></div>
+                    </div>
+                    <div class="maxTminT">
+                        <div class="tempMax">${day.tempMax}º</div>
+                        <div class="tempMin">${day.tempMin}º</div>
+                    </div>
+                </div>
+            </div>`);
+        });
+        return this;
     }
 
 
