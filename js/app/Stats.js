@@ -63,13 +63,16 @@ class Precipitation {
         this.hourlyPrecipitation = [];
         this.dailyPrecipitation = [];
     }
+
     addHourlyPrecipitation(precipitation) {
         this.hourlyPrecipitation.push(precipitation);
     }
+
     addDailyPrecipitation(precipitation) {
         this.dailyPrecipitation.push(precipitation);
     }
 }
+
 class HTMLPrecipitation extends Precipitation {
     constructor(currentHumidity) {
         super(currentHumidity);

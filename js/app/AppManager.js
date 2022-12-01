@@ -1,0 +1,120 @@
+class AppManager {
+    constructor() {
+        this._accuWeather = null;
+        this._cityForecast = null;
+        this._$searchBar = $('#cityForm');
+        this._$favoriteCityList = $('#cityList');
+        this._favoriteCityList = new Map();
+    }
+
+    set accuWeather(accuWeather) {
+        this._accuWeather = accuWeather;
+    }
+
+    get accuWeather() {
+        return this._accuWeather;
+    }
+
+    set cityForecast(forecast) {
+        this._cityForecast = forecast;
+    }
+
+    get cityForecast() {
+        return this._cityForecast;
+    }
+
+    get $searchBar() {
+        return this._$searchBar;
+    }
+
+    get $favoriteCityList() {
+        return this._$favoriteCityList;
+    }
+
+    get favoriteCityList() {
+        return this._favoriteCityList;
+    }
+
+    static getInstance() {
+        if (!AppManager.instance) {
+            this.instance = new AppManager();
+        }
+        return this.instance;
+    }
+
+    static registerEvent($selector, event, data, callback) {
+        $selector.on(event, data, callback);
+    }
+
+    static init() {
+        AppManager.getInstance().accuWeather = AccuWeather.getInstance();
+        AppManager.registerEvent(AppManager.getInstance().$searchBar.children('button'), 'click touch',
+            {$cityName: AppManager.getInstance().$searchBar.children('input')}, AppManager.getWeatherCity)
+    }
+
+    static switchCityToForeCast() {
+        debugger;
+        if (AppManager.getInstance().cityForecast == null)
+            return;
+        let $city = AppManager.getInstance().cityForecast.city.jq;
+        for (let i = $city.children().length - 1; i > 1; i--) {
+            $city.children().last().remove();
+        }
+    }
+
+    static getWeatherCity(event) {
+        event.preventDefault();
+        AppManager.switchCityToForeCast();
+        let cityName = event.data.$cityName[0].value;
+        event.data.$cityName[0].value = '';
+        event.data.$cityName.focus();
+        AppManager.getInstance().accuWeather.getCity(cityName)
+            .then(data => {
+                let city = new City();
+                city.fillCityInfo(data[0]);
+                AppManager.getInstance().cityForecast = new ForeCastCity(city);
+                AppManager.getInstance().accuWeather.getWeatherCity(AppManager.getInstance().cityForecast.city.key)
+                    .then(data => {
+                        AppManager.getInstance().cityForecast.setCurrentConditions(data).renderCurrentConditions();
+                        AppManager.registerEvent(AppManager.getInstance().cityForecast.todayjq, 'click touch',
+                            {
+                                url: AppManager.getInstance().cityForecast.currentWeatherLink
+                            }, function (e) {
+                                window.open(e.data.url, '_blank').focus();
+                            });
+                        AppManager.registerEvent($(`.favorite-${AppManager.getInstance().cityForecast.city.key}`),
+                            'click touch', {}, function (e) {
+                            e.preventDefault();
+                            debugger;
+                                if (!AppManager.getInstance().cityForecast.city.isFavorite) {
+                                    AppManager.getInstance().cityForecast.city.isFavorite = true;
+                                    $(`.favorite-${AppManager.getInstance().cityForecast.city.key} > .fa`).removeClass('fa-star-o').addClass('fa-star');
+                                    AppManager.getInstance().favoriteCityList.set(
+                                        AppManager.getInstance().cityForecast.city.key, AppManager.getInstance().cityForecast);
+                                    AppManager.getInstance().cityForecast.renderFavorite();
+                                    if(window.innerWidth > 620) {
+                                        AppManager.getInstance().$favoriteCityList.css('display', 'block');
+                                    }
+                                } else {
+                                    AppManager.getInstance().cityForecast.city.isFavorite = false;
+                                    $(`.favorite-${AppManager.getInstance().cityForecast.city.key} > .fa`).removeClass('fa-star').addClass('fa-star-o');
+                                    AppManager.getInstance().favoriteCityList.remove(AppManager.getInstance().cityForecast.city.key);
+                                    $('#cityList').children(`.cityInfo.favorite-${AppManager.getInstance().cityForecast.city.key}`).remove();
+                                }
+                            });
+                        AppManager.getInstance().accuWeather.gethourly12hour(AppManager.getInstance().cityForecast.city.key)
+                            .then(data => {
+                                AppManager.getInstance().cityForecast.set12hoursForecast(data).render12hoursConditions();
+                                AppManager.getInstance().accuWeather.getdaily5days(AppManager.getInstance().cityForecast.city.key)
+                                    .then(data => {
+                                        AppManager.getInstance().cityForecast.set5DaysForecast(data).render5DaysConditions();
+                                    })
+                                    .catch(error => console.log(error));
+                            })
+                            .catch(error => console.log(error));
+                    })
+                    .catch(error => console.log(error));
+            })
+            .catch(error => console.log(error));
+    }
+}

@@ -195,6 +195,7 @@ body {
   }
 
   #cityList {
+    display: none;
     width: 50%;
     margin-top: 30px;
 
@@ -213,7 +214,7 @@ body {
         justify-content: space-evenly;
         border-top: 1px solid;
 
-        .oneDayAfter {
+        .dayAfter {
           margin-top: 10px;
 
           .dayAfterInfo {
@@ -299,6 +300,19 @@ body {
       }
     }
   }
+  .showList {
+    display: none;
+    color: white;
+    border: none;
+    cursor: pointer;
+    background-color: transparent;
+    position: absolute;
+    right: 0;
+    margin-top: 30px;
+    width: 40px;
+    height: 40px;
+    font-size: 20px;
+  }
 }
 
 .gradient-background {
@@ -322,8 +336,9 @@ body {
 @media only screen and (max-width: 620px) {
   /* For mobile phones: */
   #forecastContainer {
+    margin-right: 10%;
     #currentCity {
-      width: 100%;
+      width: 95%;
     }
 
     #cityList {
@@ -333,6 +348,9 @@ body {
       #cityInfo {
         width: 80%;
       }
+    }
+    .showList {
+      display: block;
     }
   }
 }

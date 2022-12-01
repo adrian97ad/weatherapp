@@ -4,22 +4,19 @@ const registerServiceWorker = async () => {
     if ('serviceWorker' in navigator) { // service worker es compatible
         try {
             // Registramos el service worker para la aplicacion
-            const registration = await navigator.serviceWorker.register('/js/ServiceWorker.js',
+            const registration = await navigator.serviceWorker.register('js/sw/ServiceWorker.js',
                 {
                     updateViaCache: 'all',
                 }
             );
-            if (registration.installing){
+            if (registration.installing) {
                 console.log("Instalando el Service worker");
-            }
-            else if(registration.waiting) {
+            } else if (registration.waiting) {
                 console.log("Service worker instalando");
-            }
-            else if(registration.active) {
+            } else if (registration.active) {
                 console.log("Service worker activo");
             }
-        }
-        catch (error) {
+        } catch (error) {
             console.error(`Register fallado: ${error}`)
         }
     }

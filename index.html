@@ -7,7 +7,11 @@
     <script src="//cdnjs.cloudflare.com/ajax/libs/less.js/2.5.1/less.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <script src="js/AccuWeather.js"></script>
+    <script src="js/api/AccuWeather.js"></script>
+    <script src="js/app/AppManager.js"></script>
+    <script src="js/app/City.js"></script>
+    <script src="js/app/Stats.js"></script>
+    <script type="module" src="js/sw/RegisterServiceWorker.js"></script>
 </head>
 <body>
 <div id="forecastContainer">
@@ -16,7 +20,7 @@
             <input type="text" id="cityName" class="cityInput" placeholder="Ciudad" autocomplete="off">
             <button class="cityInput" id="getCity"><i class="fa fa-search"></i></button>
         </form>
-        <div id="todayForecast">
+        <!--<div id="todayForecast">
             <div class="todayInfo">
                 <div class="todayInfoLeft">
                     <div class="dayTemperature">12.2º</div>
@@ -44,7 +48,7 @@
                 <div class="temperatureGrpahic hourForeCast-element">
                     <div class="currentTemperatureHeight"></div>
                 </div>
-                <div class="hourlyPrecipitation"> <i class="fa fa-tint"> 2%</i></div>
+                <div class="hourlyPrecipitation"><i class="fa fa-tint"> 2%</i></div>
             </div>
             <div class="hourForeCast">
                 <div class="hour hourForeCast-element"> 11 p. m.</div>
@@ -53,7 +57,7 @@
                 <div class="temperatureGrpahic hourForeCast-element">
                     <div class="currentTemperatureHeight"></div>
                 </div>
-                <div class="hourlyPrecipitation"> <i class="fa fa-tint"> 2%</i></div>
+                <div class="hourlyPrecipitation"><i class="fa fa-tint"> 2%</i></div>
             </div>
             <div class="hourForeCast">
                 <div class="hour hourForeCast-element"> 11 p. m.</div>
@@ -62,7 +66,7 @@
                 <div class="temperatureGrpahic hourForeCast-element">
                     <div class="currentTemperatureHeight"></div>
                 </div>
-                <div class="hourlyPrecipitation"> <i class="fa fa-tint"> 2%</i></div>
+                <div class="hourlyPrecipitation"><i class="fa fa-tint"> 2%</i></div>
             </div>
             <div class="hourForeCast">
                 <div class="hour hourForeCast-element"> 11 p. m.</div>
@@ -71,7 +75,7 @@
                 <div class="temperatureGrpahic hourForeCast-element">
                     <div class="currentTemperatureHeight"></div>
                 </div>
-                <div class="hourlyPrecipitation"> <i class="fa fa-tint"> 2%</i></div>
+                <div class="hourlyPrecipitation"><i class="fa fa-tint"> 2%</i></div>
             </div>
             <div class="hourForeCast">
                 <div class="hour hourForeCast-element"> 11 p. m.</div>
@@ -80,7 +84,7 @@
                 <div class="temperatureGrpahic hourForeCast-element">
                     <div class="currentTemperatureHeight"></div>
                 </div>
-                <div class="hourlyPrecipitation"> <i class="fa fa-tint"> 2%</i></div>
+                <div class="hourlyPrecipitation"><i class="fa fa-tint"> 2%</i></div>
             </div>
             <div class="hourForeCast">
                 <div class="hour hourForeCast-element"> 11 p. m.</div>
@@ -89,7 +93,7 @@
                 <div class="temperatureGrpahic hourForeCast-element">
                     <div class="currentTemperatureHeight"></div>
                 </div>
-                <div class="hourlyPrecipitation"> <i class="fa fa-tint"> 2%</i></div>
+                <div class="hourlyPrecipitation"><i class="fa fa-tint"> 2%</i></div>
             </div>
             <div class="hourForeCast">
                 <div class="hour hourForeCast-element"> 11 p. m.</div>
@@ -98,14 +102,14 @@
                 <div class="temperatureGrpahic hourForeCast-element">
                     <div class="currentTemperatureHeight"></div>
                 </div>
-                <div class="hourlyPrecipitation"> <i class="fa fa-tint"> 2%</i></div>
+                <div class="hourlyPrecipitation"><i class="fa fa-tint"> 2%</i></div>
             </div>
         </div>
         <div class="weeklyForecasts gradient-background">
             <div class="dayForeCast">
                 <div class="dayWeek">lunes</div>
                 <div class="dayStats">
-                    <div class="dailyPrecipitation"> <i class="fa fa-tint"> 2%</i></div>
+                    <div class="dailyPrecipitation"><i class="fa fa-tint"> 2%</i></div>
                     <div class="weatherDayNight">
                         <div class="dayWeather weatherIcon weatherIcon-1"></div>
                         <div class="nightWeather weatherIcon weatherIcon-33"></div>
@@ -119,7 +123,7 @@
             <div class="dayForeCast">
                 <div class="dayWeek">Hoy</div>
                 <div class="dayStats">
-                    <div class="dailyPrecipitation"> <i class="fa fa-tint"> 2%</i></div>
+                    <div class="dailyPrecipitation"><i class="fa fa-tint"> 2%</i></div>
                     <div class="weatherDayNight">
                         <div class="dayWeather weatherIcon weatherIcon-1"></div>
                         <div class="nightWeather weatherIcon weatherIcon-33"></div>
@@ -133,7 +137,7 @@
             <div class="dayForeCast">
                 <div class="dayWeek">martes</div>
                 <div class="dayStats">
-                    <div class="dailyPrecipitation"> <i class="fa fa-tint"> 2%</i></div>
+                    <div class="dailyPrecipitation"><i class="fa fa-tint"> 2%</i></div>
                     <div class="weatherDayNight">
                         <div class="dayWeather weatherIcon weatherIcon-1"></div>
                         <div class="nightWeather weatherIcon weatherIcon-33"></div>
@@ -147,7 +151,7 @@
             <div class="dayForeCast">
                 <div class="dayWeek">miércoles</div>
                 <div class="dayStats">
-                    <div class="dailyPrecipitation"> <i class="fa fa-tint"> 2%</i></div>
+                    <div class="dailyPrecipitation"><i class="fa fa-tint"> 2%</i></div>
                     <div class="weatherDayNight">
                         <div class="dayWeather weatherIcon weatherIcon-1"></div>
                         <div class="nightWeather weatherIcon weatherIcon-33"></div>
@@ -179,7 +183,7 @@
                 <div class="currentWeather weatherIcon weatherIcon-1"></div>
             </div>
             <div class="nextDays">
-                <div class="oneDayAfter">
+                <div class="dayAfter">
                     <div class="weatherIcon weatherIcon-1"></div>
                     <div class="dayAfterInfo">
                         <div class="weekDay">Viernes</div>
@@ -191,30 +195,61 @@
                 </div>
             </div>
         </div>
+    </div>-->
     </div>
+    <div id="cityList">
+        <!--<div class="cityInfo gradient-background">
+            <div class="todayInfo">
+                <div class="todayInfoLeft">
+                    <div class="dayTemperature">12.2º</div>
+                    <div class="cityAndState">
+                        <div class="cityName">Alcorcón</div>
+                        <div class="stateName">Comunidad de Madrid</div>
+                        <span class="favorite selected"><i class="fa fa-star"></i></span>
+                    </div>
+                    <div class="maxTminTHumidity">
+                        <div class="tempMax">20º</div>
+                        <div class="tempMin">17º</div>
+                        <div class="humidity">Humedad: 48</div>
+                    </div>
+                </div>
+                <div class="currentWeather weatherIcon weatherIcon-1"></div>
+            </div>
+            <div class="nextDays">
+                <div class="dayAfter">
+                    <div class="weatherIcon weatherIcon-1"></div>
+                    <div class="dayAfterInfo">
+                        <div class="weekDay">Viernes</div>
+                        <div class="nextDaysTemperatures">
+                            <div class="tempMax">20º</div>
+                            <div class="tempMin">17º</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>-->
+    </div>
+    <button class="showList"><i class="fa fa-list"></i></button>
 </div>
 
-<script type="module" src="js/registerServiceWorker.js"></script>
 <script>
     $(document).ready(function () {
-        let weather = AccuWeather.getInstance();
-        const form = document.querySelector("#getCity");
-        city = null;
-        form.addEventListener("submit", e => {
+        let appManager = AppManager.getInstance();
+        AppManager.init();
+
+        $('#showList').on('click touch', function (e) {
             e.preventDefault();
-            let cityName = $('#cityName')[0].value;
-            form.reset();
-            $('#cityName').focus();
-            debugger;
-            weather.getWeatherCiy(cityName, true)
-                .then(data => {
-                    city = data;
-                    console.log(data)
-                    $('.listadoCiudades').append(`<li>En ${cityName} es ${data.IsDayTime ? 'de día' : 'de noche'},
-                    está ${data.WeatherText} y hace una temperatura de ${data.ApparentTemperature.Metric.Value}
-                    ${data.ApparentTemperature.Metric.Unit}</li>`);
-                })
-                .catch(error => console.log(error));
+            if (AppManager.getInstance().favoriteCityList.length === 0)
+                return;
+            else {
+                if ($('#cityList').css('display') === 'block') {
+                    $('#cityList').css('display', 'none');
+                    $('#currentCity').css('display', 'block');
+                } else {
+                    $('#cityList').css('display', 'block');
+                    $('#currentCity').css('display', 'none');
+                }
+            }
         });
     });
 </script>

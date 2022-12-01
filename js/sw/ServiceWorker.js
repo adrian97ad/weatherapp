@@ -10,7 +10,7 @@ const putInCache = async (request, response) => {
     const cache = await caches.open("v1");
     await cache.put(request, response);
 };
-const cacheFirst = async ({ request, preloadResponsePromise, fallbackUrl }) => {
+const cacheFirst = async ({request, preloadResponsePromise, fallbackUrl}) => {
     // Primero intenta obtener el recurso desde caché
     const responseFromCache = await caches.match(request);
     if (responseFromCache) {
@@ -43,7 +43,7 @@ const cacheFirst = async ({ request, preloadResponsePromise, fallbackUrl }) => {
         // devolver un objeto Response
         return new Response("Ocurrió un error de red", {
             status: 408,
-            headers: { "Content-Type": "text/plain" },
+            headers: {"Content-Type": "text/plain"},
         });
     }
 };
@@ -67,12 +67,14 @@ self.addEventListener("install", event => {
     // El service worker no se instala hasta que el codigo dentro de waitUntil haya ocurrido con exito
     event.waitUntil(addResourcesToCache(
         [
-            "./",
-            "./index.html",
-            "./js/AccuWeather.js",
-            "./js/RegisterServiceWorker.js",
-            "./js/ServiceWorker.js",
-            "./css/weatherapp.less"
+            "/",
+            "/index.html",
+            "/js/app/City.js",
+            "/js/app/Stats.js",
+            "/js/api/AccuWeather.js",
+            "/js/sw/RegisterServiceWorker.js",
+            "/js/sw/ServiceWorker.js",
+            "/css/weatherapp.less"
         ]
     ));
 });
