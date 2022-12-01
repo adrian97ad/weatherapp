@@ -145,7 +145,6 @@ class ForeCastCity {
     }
 
     renderFavorite() {
-        debugger;
         $('#cityList').append(`<div class="cityInfo gradient-background favorite-${this.city.key}">
             <div class="todayInfo">
                 <div class="todayInfoLeft">
@@ -153,7 +152,7 @@ class ForeCastCity {
                     <div class="cityAndState">
                         <div class="cityName">${this.city.cityName}</div>
                         <div class="stateName">${this.city.cityState}</div>
-                        <span class="favorite favorite-${this.city.key}"><i class="fa fa-star"></i></span>
+                        <span class="favorite favorite-${this.city.key} favoriteList"><i class="fa fa-star"></i></span>
                     </div>
                     <div class="maxTminTHumidity">
                         <div class="tempMax">${this.temperature.todayMaxTemp}º</div>
@@ -166,7 +165,7 @@ class ForeCastCity {
             <div class="nextDays">
             </div>
         </div>`);
-        for (let i = 0; i < 3; i++) {
+        for (let i = 1; i < 4; i++) {
             let day = this.daysForeCast[i]
             $(`.cityInfo.favorite-${this.city.key} > .nextDays`).append(`<div class="dayAfter">
                     <div class="weatherIcon weatherIcon-${day.dayWeather}"></div>

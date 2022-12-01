@@ -3,7 +3,6 @@ class AppManager {
         this._accuWeather = null;
         this._cityForecast = null;
         this._$searchBar = $('#cityForm');
-        this._$favoriteCityList = $('#cityList');
         this._favoriteCityList = new Map();
     }
 
@@ -25,10 +24,6 @@ class AppManager {
 
     get $searchBar() {
         return this._$searchBar;
-    }
-
-    get $favoriteCityList() {
-        return this._$favoriteCityList;
     }
 
     get favoriteCityList() {
@@ -53,12 +48,28 @@ class AppManager {
     }
 
     static switchCityToForeCast() {
-        debugger;
         if (AppManager.getInstance().cityForecast == null)
             return;
         let $city = AppManager.getInstance().cityForecast.city.jq;
-        for (let i = $city.children().length - 1; i > 1; i--) {
+        for (let i = $city.children().length - 1; i > 0; i--) {
             $city.children().last().remove();
+        }
+    }
+
+    static addElementToFavorite() {
+        AppManager.getInstance().cityForecast.city.isFavorite = true;
+        $(`.favorite-${AppManager.getInstance().cityForecast.city.key} > .fa`).removeClass('fa-star-o').addClass('fa-star');
+        AppManager.getInstance().favoriteCityList.set(
+            AppManager.getInstance().cityForecast.city.key, AppManager.getInstance().cityForecast);
+        AppManager.getInstance().cityForecast.renderFavorite();
+    }
+    static removeElementFromFavorite() {
+        AppManager.getInstance().cityForecast.city.isFavorite = false;
+        $(`.favorite-${AppManager.getInstance().cityForecast.city.key} > .fa`).removeClass('fa-star').addClass('fa-star-o');
+        $('#cityList').children(`.cityInfo.favorite-${AppManager.getInstance().cityForecast.city.key}`).remove();
+        AppManager.getInstance().favoriteCityList.delete(AppManager.getInstance().cityForecast.city.key);
+        if(AppManager.getInstance().favoriteCityList.length === 0) {
+            $('#cityList').css('display', 'none');
         }
     }
 
@@ -85,21 +96,25 @@ class AppManager {
                         AppManager.registerEvent($(`.favorite-${AppManager.getInstance().cityForecast.city.key}`),
                             'click touch', {}, function (e) {
                             e.preventDefault();
-                            debugger;
                                 if (!AppManager.getInstance().cityForecast.city.isFavorite) {
-                                    AppManager.getInstance().cityForecast.city.isFavorite = true;
-                                    $(`.favorite-${AppManager.getInstance().cityForecast.city.key} > .fa`).removeClass('fa-star-o').addClass('fa-star');
-                                    AppManager.getInstance().favoriteCityList.set(
-                                        AppManager.getInstance().cityForecast.city.key, AppManager.getInstance().cityForecast);
-                                    AppManager.getInstance().cityForecast.renderFavorite();
+                                    AppManager.addElementToFavorite();
+                                    AppManager.registerEvent($(`.favorite-${AppManager.getInstance().cityForecast.city.key} .favoriteList`),
+                                        'click touch', {
+                                        $selector: AppManager.getInstance().cityForecast.city.key
+                                        }, function (e) {
+                                            e.preventDefault();
+                                            $(`.favorite-${e.data.$selector} .favoriteList > .fa`).removeClass('fa-star').addClass('fa-star-o');
+                                            $('#cityList').children(`.cityInfo.favorite-${e.data.$selector}`).remove();
+                                            AppManager.getInstance().favoriteCityList.delete(e.data.$selector);
+                                            if(AppManager.getInstance().favoriteCityList.length === 0) {
+                                                $('#cityList').css('display', 'none');
+                                            }
+                                    });
                                     if(window.innerWidth > 620) {
-                                        AppManager.getInstance().$favoriteCityList.css('display', 'block');
+                                        $('#cityList').css('display', 'block');
                                     }
                                 } else {
-                                    AppManager.getInstance().cityForecast.city.isFavorite = false;
-                                    $(`.favorite-${AppManager.getInstance().cityForecast.city.key} > .fa`).removeClass('fa-star').addClass('fa-star-o');
-                                    AppManager.getInstance().favoriteCityList.remove(AppManager.getInstance().cityForecast.city.key);
-                                    $('#cityList').children(`.cityInfo.favorite-${AppManager.getInstance().cityForecast.city.key}`).remove();
+                                    AppManager.removeElementFromFavorite();
                                 }
                             });
                         AppManager.getInstance().accuWeather.gethourly12hour(AppManager.getInstance().cityForecast.city.key)

@@ -232,7 +232,7 @@ body {
               justify-content: space-evenly;
 
               .tempMin {
-                color: #687488;
+                color: #a2b5d5;
               }
             }
           }
@@ -270,7 +270,7 @@ body {
 
         .stateName {
           padding-left: 5px;
-          color: #687488;
+          color: #a2b5d5;
         }
 
         .favorite {
@@ -291,7 +291,7 @@ body {
 
         .tempMin {
           margin-right: 10px;
-          color: #687488;
+          color: #a2b5d5;
         }
 
         .humidity {
@@ -300,7 +300,7 @@ body {
       }
     }
   }
-  .showList {
+   #showList {
     display: none;
     color: white;
     border: none;
@@ -312,6 +312,36 @@ body {
     width: 40px;
     height: 40px;
     font-size: 20px;
+  }
+}
+.footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  background-color: #27b7c1;
+  .autor {
+    position: relative;
+    right: 0;
+    margin: 5px;
+  }
+  .urls {
+    margin-left: 10px;
+    display: flex;
+    flex-direction: row;
+  }
+
+  .footer-icon {
+    width: 50px;
+    height: 50px;
+    font-size: 40px;
+  }
+  .accuweather-icon {
+    cursor: pointer;
+    width: 325px;
+    height: 50px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-image: url("/media/accuweatherLogo.png");
   }
 }
 
@@ -349,7 +379,7 @@ body {
         width: 80%;
       }
     }
-    .showList {
+    #showList {
       display: block;
     }
   }
