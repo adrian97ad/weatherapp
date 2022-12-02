@@ -41,7 +41,7 @@
 
         $('#showList').on('click touch', function (e) {
             e.preventDefault();
-            if (AppManager.getInstance().favoriteCityList.length === 0)
+            if (AppManager.getInstance().favoriteCityList.size === 0)
                 return;
             else {
                 if ($('#cityList').css('display') === 'block') {
@@ -54,7 +54,7 @@
             }
         });
         window.addEventListener("resize", function () {
-            if(window.innerWidth > 620 && AppManager.getInstance().favoriteCityList.length !== 0) {
+            if(window.innerWidth > 620 && AppManager.getInstance().favoriteCityList.size !== 0) {
                 $('#cityList').css('display', 'block');
             }
             else {

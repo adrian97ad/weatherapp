@@ -177,6 +177,7 @@ body {
           flex-direction: row;
           align-items: center;
           justify-content: space-between;
+          width: 50%;
 
           .weatherDayNight {
             display: flex;
@@ -315,7 +316,7 @@ body {
   }
 }
 .footer {
-  position: absolute;
+  position: fixed;
   bottom: 0;
   width: 100%;
   background-color: #27b7c1;
@@ -367,6 +368,7 @@ body {
   /* For mobile phones: */
   #forecastContainer {
     margin-right: 10%;
+    overflow-x: hidden;
     #currentCity {
       width: 95%;
     }

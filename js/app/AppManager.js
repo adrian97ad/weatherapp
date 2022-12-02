@@ -68,7 +68,7 @@ class AppManager {
         $(`.favorite-${AppManager.getInstance().cityForecast.city.key} > .fa`).removeClass('fa-star').addClass('fa-star-o');
         $('#cityList').children(`.cityInfo.favorite-${AppManager.getInstance().cityForecast.city.key}`).remove();
         AppManager.getInstance().favoriteCityList.delete(AppManager.getInstance().cityForecast.city.key);
-        if(AppManager.getInstance().favoriteCityList.length === 0) {
+        if(AppManager.getInstance().favoriteCityList.size === 0) {
             $('#cityList').css('display', 'none');
         }
     }
@@ -106,7 +106,7 @@ class AppManager {
                                             $(`.favorite-${e.data.$selector} .favoriteList > .fa`).removeClass('fa-star').addClass('fa-star-o');
                                             $('#cityList').children(`.cityInfo.favorite-${e.data.$selector}`).remove();
                                             AppManager.getInstance().favoriteCityList.delete(e.data.$selector);
-                                            if(AppManager.getInstance().favoriteCityList.length === 0) {
+                                            if(AppManager.getInstance().favoriteCityList.size === 0) {
                                                 $('#cityList').css('display', 'none');
                                             }
                                     });
