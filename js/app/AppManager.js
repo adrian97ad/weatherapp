@@ -124,12 +124,24 @@ class AppManager {
                                     .then(data => {
                                         AppManager.getInstance().cityForecast.set5DaysForecast(data).render5DaysConditions();
                                     })
-                                    .catch(error => console.log(error));
+                                    .catch(error => {
+                                        $('#cityName')[0].value = 'Ha ocurrido un error, disculpe las molestias';
+                                        console.log(error)
+                                    });
                             })
-                            .catch(error => console.log(error));
+                            .catch(error => {
+                                $('#cityName')[0].value = 'Ha ocurrido un error, disculpe las molestias';
+                                console.log(error)
+                            });
                     })
-                    .catch(error => console.log(error));
+                    .catch(error => {
+                        $('#cityName')[0].value = 'Ha ocurrido un error, disculpe las molestias';
+                        console.log(error)
+                    });
             })
-            .catch(error => console.log(error));
+            .catch(error => {
+                $('#cityName')[0].value = 'Ha ocurrido un error, disculpe las molestias';
+                console.log(error)
+            });
     }
 }
